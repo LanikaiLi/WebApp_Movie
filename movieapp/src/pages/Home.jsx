@@ -27,14 +27,27 @@ function Home () {
   
   
 
-    const handleSearch = (e) => {
-        e.preventDefault() // by default, the submit button will always refresh the page which means user's typed search query will be cleared after they clicked search, and we don't want that to happen
-        alert(searchQuery)
-    };
+    const handleSearch = async (e) => {
+        e.preventDefault(); // by default, the submit button will always refresh the page which means user's typed search query will be cleared after they clicked search, and we don't want that to happen
+        if (!searchQuery.trim()) return // this is to prevent users from typing empty string or spaces when searching
+        if (loading) return // this is to prevent users from searching while the screen is still loading
+    
+        setLoading(true)
+        try {
+            const searchResults = await searchMovies(searchQuery)
+            setMovies(searchResults)
+            setError(null) // this is to refresh the error state, if last time there is an error and this time it works fine, we need to clear the error
+        } catch (err) {
+            console.log(err)
+            setError("Failed to search movies...")
+        } finally {
+            setLoading(false)
+        }
+      };
 
     return (
         <div className = "home">
-            <form onSubmit={handleSearch} className="search-fomr">
+            <form onSubmit={handleSearch} className="search-form">
                 <input 
                 type = "text"
                 placeholder="Search for movies..."
@@ -49,7 +62,7 @@ function Home () {
             {error && <div className="error-message">{error}</div>} 
 
             {loading ? ( // the line above is for displaying the error message, this line is for displaying the loading status of the webpage
-                <div className = "loadging">Loading...</div>
+                <div className = "loading">Loading...</div>
             ): (
                 <div className = "movies-grid">
                 {movies.map(
