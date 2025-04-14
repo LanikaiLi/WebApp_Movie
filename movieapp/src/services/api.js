@@ -1,4 +1,4 @@
-const API_KEY = "e230679db5186d1b7a3515b8b0ecd7ec";
+const API_KEY = import.meta.env.VITE_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export const getPopularMovies = async () => { // what async does is to ask the web component to wait until this function get executed and result is retruned, then render
