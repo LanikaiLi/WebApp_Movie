@@ -1,15 +1,31 @@
 import MovieCard from "../components/MovieCard";
-import {useState} from "react";
+import { useState, useEffect } from "react";
+import { searchMovies, getPopularMovies } from "../services/api";
 import "../css/Home.css"
 
 function Home () {
     const [searchQuery, setSearchQuery] = useState("");
-
-    const movies = [
-        {id:1, title: "Lily", release_date: "2020"},
-        {id:2, title: "The Science", release_date: "2021"},
-        {id:1, title: "Dream", release_date: "2023"}
-    ];
+    const [movies, setMovies] = useState([]);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      const loadPopularMovies = async () => {
+        try {
+          const popularMovies = await getPopularMovies();
+          setMovies(popularMovies);
+        } catch (err) {
+          console.log(err); // this is to show you the log for debugging
+          setError("Failed to load movies...");
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      loadPopularMovies();
+    }, []);
+  
+  
 
     const handleSearch = (e) => {
         e.preventDefault() // by default, the submit button will always refresh the page which means user's typed search query will be cleared after they clicked search, and we don't want that to happen
@@ -28,8 +44,14 @@ function Home () {
                 >
                 </input>
                 <button type = "submit" className="search-button">Search</button>
-            </form>
-            <div className = "movies-grid">
+            </form> 
+
+            {error && <div className="error-message">{error}</div>} 
+
+            {loading ? ( // the line above is for displaying the error message, this line is for displaying the loading status of the webpage
+                <div className = "loadging">Loading...</div>
+            ): (
+                <div className = "movies-grid">
                 {movies.map(
                     (movie) => 
                     movie.title.toLowerCase().startsWith(searchQuery) &&
@@ -38,8 +60,15 @@ function Home () {
                     )   
                 }
             </div>
+            )} 
         </div>
     );
 }
 
 export default Home
+
+//  const movies = [
+   // {id:1, title: "Lily", release_date: "2020"},
+    //{id:2, title: "The Science", release_date: "2021"},
+    //{id:1, title: "Dream", release_date: "2023"}
+//];
