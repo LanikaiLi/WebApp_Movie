@@ -67,7 +67,7 @@ function Home () {
                 <div className = "movies-grid">
                 {movies.map(
                     (movie) => 
-                    movie.title.toLowerCase().startsWith(searchQuery) &&
+                    movie.title.toLowerCase().startsWith(searchQuery) && // this is to search for the popular movies that starts with 's', it is different than what the 'handlesearch' function does, what handle search does is to return all movies contains 's' - not only popular ones
                     // dynamic rendering based on value passed into the functional component
                     (<MovieCard movie = {movie} key = {movie.id}></MovieCard>) //Note that for dynamic rendering, it is compulsory to always add a key input parameter no matter if it exist in original function
                     )   

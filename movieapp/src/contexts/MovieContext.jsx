@@ -2,27 +2,24 @@ import {createContext, useState, useContext, useEffect} from "react"
 
 const MovieContext = createContext()
 
-export const useMovieContext = () => useContext(MovieContext)
+export const useMovieContext = () => useContext(MovieContext) // if you hover over useContext, you will be able to see that it returns the current context value, here, it will return movie context's value which are: isFavorite, addToFavorites, removeFromFavorites,..
 
-export const MovieProvider = ({children}) => {
-    const [favorites, setFavorites] = useState([]) // you want this state to be shared across multiple components
-
-    useEffect(() => {
+export const MovieProvider = ({children}) => { // since movie provider returns component, movie provider is a functional component, so when it is used, it will be directly used as a component (<...>) instead of called as 'XXX()'
+    const [favorites, setFavorites] = useState(() => {
         const storedFavs = localStorage.getItem("favorites")
-
-        if (storedFavs) setFavorites(JSON.parse(storedFavs))
-    }, [])
+        return storedFavs ? JSON.parse(storedFavs) : []
+    })
 
     useEffect(() => {
-        localStorage.setItem('favorites', JSON.stringify(favorites))
-    }, [favorites]) // whenever favorites list changed, update local storage
+        localStorage.setItem("favorites", JSON.stringify(favorites))
+      }, [favorites])
 
     const addToFavorites = (movie) => {
-        setFavorites(prev => [...prev, movie])
+        setFavorites(prev => [...prev, movie]) //... means append, prev is just Favorites, so this means Favorites = Favorites.append(movie)
     }
 
     const removeFromFavorites = (movieId) => {
-        setFavorites(prev => prev.filter(movie => movie.id !== movieId))
+        setFavorites(prev => prev.filter(movie => movie.id !== movieId)) // prev is just Favorites
     }
     
     const isFavorite = (movieId) => {
