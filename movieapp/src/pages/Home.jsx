@@ -47,16 +47,16 @@ function Home () {
 
     return (
         <div className = "home">
-            <form onSubmit={handleSearch} className="search-form">
+            <form onSubmit={handleSearch} className="search-form"> 
                 <input 
                 type = "text"
                 placeholder="Search for movies..."
                 className="search-input"
-                value = {searchQuery}
+                value = {searchQuery} // even though handleSearch seems to be called prior to this line, it will not be called until when the user submit the button / click the button, so in the end, what happens is that, the users type in search query first and only when they click search button, handleSearch function will be called
                 onChange = {(e) => setSearchQuery(e.target.value)} // takes user's input search query and set it as the current value of the searchquery state
                 >
                 </input>
-                <button type = "submit" className="search-button">Search</button>
+                <button type = "submit" className="search-button">Search</button> 
             </form> 
 
             {error && <div className="error-message">{error}</div>} 
